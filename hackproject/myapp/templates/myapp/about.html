@@ -1,0 +1,94 @@
+{% extends 'myapp/base.html' %}
+
+{% block title %}About Us - FoodShare{% endblock %}
+
+{% block content %}
+<!-- About Section -->
+<section class="py-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 mx-auto text-center">
+                <h2 class="display-4 fw-bold mb-4">About Zeta</h2>
+                <p class="lead text-muted">
+                    Zeta is a community-driven platform dedicated to reducing food waste by connecting people who have surplus food with those who need it. Our mission is to create a sustainable and compassionate world where no food goes to waste.
+                </p>
+            </div>
+        </div>
+
+        <!-- Mission and Vision -->
+        <div class="row mt-5">
+            <div class="col-md-6">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body p-4">
+                        <div class="text-center mb-4">
+                            <i class="fas fa-heart fa-3x text-success"></i>
+                        </div>
+                        <h4 class="card-title text-center">Our Mission</h4>
+                        <p class="card-text text-muted text-center">
+Our mission is to reduce food waste by connecting individuals, restaurants, and businesses with surplus food to those in need through a seamless digital platform, promoting responsible consumption and redistribution. We aim to create a sustainable ecosystem where donors can choose to earn or give, fostering a community-driven approach to tackling food insecurity while making food sharing both impactful and rewarding
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body p-4">
+                        <div class="text-center mb-4">
+                            <i class="fas fa-globe fa-3x text-success"></i>
+                        </div>
+                        <h4 class="card-title text-center">Our Vision</h4>
+                        <p class="card-text text-muted text-center">
+                            To create a sustainable ecosystem where surplus food is efficiently redistributed, reducing food waste and hunger while empowering individuals and businesses to benefit from responsible sharing
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Team Section -->
+        <div class="row mt-5">
+            <div class="col-12 text-center">
+                <h3 class="fw-bold mb-4">Meet Our Team</h3>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="card h-100 border-0 shadow-sm">
+                    <img src="https://placehold.co/400x300" class="card-img-top" alt="Team Member">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">Kareem Ikka</h5>
+                        <p class="card-text text-muted">Co-Founder & CEO</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="card h-100 border-0 shadow-sm">
+                    <img src="https://placehold.co/400x300" class="card-img-top" alt="Team Member">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">Faisy</h5>
+                        <p class="card-text text-muted">Co-Founder & CTO</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="card h-100 border-0 shadow-sm">
+                    <img src="https://placehold.co/400x300" class="card-img-top" alt="Team Member">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">Gafoor </h5>
+                        <p class="card-text text-muted">Head of Community</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Call to Action -->
+        <div class="row mt-5">
+            <div class="col-12 text-center">
+                <h3 class="fw-bold mb-4">Join Us in Making a Difference</h3>
+                <p class="lead text-muted">
+                    Together, we can reduce food waste and create a better future for everyone.
+                </p>
+                <a href="{% url 'signup' %}" class="btn btn-success btn-lg">Sign Up Now</a>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

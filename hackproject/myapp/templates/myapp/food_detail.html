@@ -1,0 +1,248 @@
+{% extends 'myapp/base.html' %}
+{% load static %}
+
+{% block title %}{{ food_item.title }} - FoodShare{% endblock %}
+
+{% block content %}
+<!-- Link to Custom CSS -->
+<link rel="stylesheet" href="{% static 'css/food_detail.css' %}">
+
+<div class="container mt-4">
+    <!-- Back Button -->
+    <div class="mb-4">
+        <a href="javascript:history.back()" class="btn btn-outline-secondary">
+            <i class="fas fa-arrow-left me-2"></i>Back to Listings
+        </a>
+    </div>
+    
+    <div class="row">
+        <!-- Food Image Gallery -->
+        <div class="col-lg-6">
+            <div class="card shadow-sm mb-4">
+                {% if food_item.image %}
+                    <img src="{{ food_item.image.url }}" class="card-img-top food-image" alt="{{ food_item.title }}">
+                {% else %}
+                    <div class="placeholder-image d-flex align-items-center justify-content-center">
+                        <i class="fas fa-utensils fa-5x text-muted"></i>
+                    </div>
+                {% endif %}
+            </div>
+            
+            <!-- Additional Images (if any) -->
+            <div class="row g-2">
+                {% for i in "123" %}
+                <div class="col-4">
+                    <div class="card shadow-sm">
+                        <img src="https://placehold.co/300x200?text=Food+{{ forloop.counter }}" 
+                             class="img-fluid rounded" 
+                             alt="Additional image {{ forloop.counter }}">
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Food Details -->
+        <div class="col-lg-6">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div>
+                            <h1 class="h2 fw-bold mb-2">{{ food_item.title }}</h1>
+                            <div class="d-flex align-items-center mb-3">
+                                <img src="{% static 'images/default-avatar.png' %}" 
+                                     class="rounded-circle me-2" 
+                                     width="30" 
+                                     alt="{{ food_item.user.username }}">
+                                <span class="text-muted">Posted by {{ food_item.user.username }} on {{ food_item.date_posted|date:"M d, Y" }}</span>
+                            </div>
+                        </div>
+                        <span class="badge bg-success fs-6">{{ food_item.get_food_type_display }}</span>
+                    </div>
+                    
+                    <hr>
+                    
+                    <div class="mb-4">
+                        <h4 class="fw-bold mb-3">Description</h4>
+                        <p class="lead">{{ food_item.description }}</p>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <h4 class="fw-bold mb-3">Details</h4>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <div class="d-flex align-items-center">
+                                    <i class="fas fa-weight me-3 text-success"></i>
+                                    <div>
+                                        <h6 class="mb-0">Quantity</h6>
+                                        <p class="mb-0">{{ food_item.quantity }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <div class="d-flex align-items-center">
+                                    <i class="fas fa-clock me-3 text-success"></i>
+                                    <div>
+                                        <h6 class="mb-0">Expiry Date</h6>
+                                        <p class="mb-0">{{ food_item.expiry_date|date:"M d, Y H:i" }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <div class="d-flex align-items-center">
+                                    <i class="fas fa-map-marker-alt me-3 text-success"></i>
+                                    <div>
+                                        <h6 class="mb-0">Location</h6>
+                                        <p class="mb-0">{{ food_item.location }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <div class="d-flex align-items-center">
+                                    <i class="fas fa-user me-3 text-success"></i>
+                                    <div>
+                                        <h6 class="mb-0">Shared by</h6>
+                                        <p class="mb-0">{{ food_item.user.username }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <hr>
+                    
+                    <!-- Action Buttons -->
+                    <div class="d-grid gap-3">
+                        <button class="btn btn-success btn-lg" data-bs-toggle="modal" data-bs-target="#requestModal">
+                            <i class="fas fa-handshake me-2"></i>Request This Food
+                        </button>
+                        
+                        <a href="#" class="btn btn-outline-success btn-lg" id="showMapBtn">
+                            <i class="fas fa-map-marked-alt me-2"></i>View On Map
+                        </a>
+                        
+                        {% if request.user == food_item.user %}
+                            <div class="d-grid gap-2">
+                                <a href="{% url 'edit_food_item' food_item.id %}" class="btn btn-outline-primary">
+                                    <i class="fas fa-edit me-2"></i>Edit Listing
+                                </a>
+                                <button class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#deleteModal">
+                                    <i class="fas fa-trash me-2"></i>Delete Listing
+                                </button>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Map Section (Initially Hidden) -->
+    <div class="row mt-4 d-none" id="mapSection">
+        <div class="col-12">
+            <div class="card shadow-sm">
+                <div class="card-body p-0">
+                    <div class="map-container ratio ratio-16x9">
+                        <iframe 
+                            id="locationMap"
+                            src="https://www.google.com/maps/embed/v1/place?key=YOUR_API_KEY&q={{ food_item.location|urlencode }}"
+                            allowfullscreen>
+                        </iframe>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Request Modal -->
+<div class="modal fade" id="requestModal" tabindex="-1" aria-labelledby="requestModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="requestModalLabel">Request {{ food_item.title }}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="requestForm">
+                    <div class="mb-3">
+                        <label for="requestMessage" class="form-label">Message to Donor</label>
+                        <textarea class="form-control" id="requestMessage" rows="4" required>
+Hello {{ food_item.user.username }}, I'm interested in your "{{ food_item.title }}" listing. 
+When would be a good time to pick it up?
+                        </textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="requestContact" class="form-label">Contact Info</label>
+                        <input type="text" class="form-control" id="requestContact" 
+                               value="{{ request.user.email }}" required>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-success" id="submitRequest">
+                    <i class="fas fa-paper-plane me-2"></i>Send Request
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Delete Confirmation Modal (for owners) -->
+{% if request.user == food_item.user %}
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title" id="deleteModalLabel">Confirm Deletion</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to delete "{{ food_item.title }}"? This action cannot be undone.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <form method="POST" action="{% url 'delete_food_item' food_item.id %}">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger">
+                        <i class="fas fa-trash me-2"></i>Delete Permanently
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<!-- JavaScript for Interactive Features -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Toggle map visibility
+    const showMapBtn = document.getElementById('showMapBtn');
+    const mapSection = document.getElementById('mapSection');
+    
+    showMapBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        mapSection.classList.toggle('d-none');
+        
+        // Update button text
+        if (mapSection.classList.contains('d-none')) {
+            showMapBtn.innerHTML = '<i class="fas fa-map-marked-alt me-2"></i>View On Map';
+        } else {
+            showMapBtn.innerHTML = '<i class="fas fa-times me-2"></i>Hide Map';
+        }
+    });
+    
+    // Handle request submission
+    const submitRequest = document.getElementById('submitRequest');
+    if (submitRequest) {
+        submitRequest.addEventListener('click', function() {
+            // Here you would typically send the request to your backend
+            alert('Request sent successfully! The donor will contact you soon.');
+            $('#requestModal').modal('hide');
+        });
+    }
+});
+</script>
+{% endblock %}

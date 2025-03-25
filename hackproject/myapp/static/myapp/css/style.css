@@ -1,0 +1,205 @@
+/* food_sharing/static/css/style.css */
+
+/* Global Styles */
+:root {
+    --primary: #28a745;
+    --primary-dark: #218838;
+    --secondary: #6c757d;
+    --light: #f8f9fa;
+    --dark: #343a40;
+  }
+  
+  body {
+    font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    color: #333;
+  }
+  
+  /* Hero Section */
+  .hero-section {
+    padding: 60px 0;
+    background-color: #f9fbf9;
+    position: relative;
+  }
+  
+  .hero-section:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background-image: url('/static/images/pattern.png');
+    opacity: 0.1;
+    pointer-events: none;
+  }
+  
+  .min-vh-75 {
+    min-height: 75vh;
+  }
+  
+  /* Cards */
+  .card {
+    transition: transform 0.3s, box-shadow 0.3s;
+    border: none;
+  }
+  
+  .card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1) !important;
+  }
+  
+  .stat-card {
+    border-radius: 10px;
+    transition: all 0.3s ease;
+  }
+  
+  .stat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1) !important;
+  }
+  
+  /* Buttons */
+  .btn {
+    border-radius: 5px;
+    padding: 0.5rem 1.5rem;
+    transition: all 0.3s ease;
+  }
+  
+  .btn-success {
+    background-color: var(--primary);
+    border-color: var(--primary);
+  }
+  
+  .btn-success:hover {
+    background-color: var(--primary-dark);
+    border-color: var(--primary-dark);
+  }
+  
+  .btn-outline-success {
+    color: var(--primary);
+    border-color: var(--primary);
+  }
+  
+  .btn-outline-success:hover {
+    background-color: var(--primary);
+    border-color: var(--primary);
+  }
+  
+  /* Section Headings */
+  .section-heading h2 {
+    position: relative;
+    display: inline-block;
+    margin-bottom: 15px;
+  }
+  
+  .section-heading h2:after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80px;
+    height: 3px;
+    background-color: var(--primary);
+  }
+  
+  /* Form Elements */
+  .form-control, .form-select {
+    border-radius: 5px;
+    padding: 10px 15px;
+    border: 1px solid #ced4da;
+  }
+  
+  .form-control:focus, .form-select:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 0.25rem rgba(40, 167, 69, 0.25);
+  }
+  
+  /* Badge */
+  .badge {
+    padding: 6px 10px;
+    font-weight: 500;
+    border-radius: 4px;
+  }
+  
+  /* Divider */
+  .divider {
+    width: 100%;
+    text-align: center;
+    border-bottom: 1px solid #e0e0e0;
+    line-height: 0.1em;
+  }
+  
+  .divider span {
+    background: #fff;
+    padding: 0 10px;
+    font-size: 0.8rem;
+  }
+  
+  /* Footer */
+  footer a {
+    text-decoration: none;
+    transition: color 0.3s;
+  }
+  
+  footer a:hover {
+    color: var(--primary) !important;
+  }
+  
+  .social-icons a {
+    display: inline-block;
+    width: 36px;
+    height: 36px;
+    line-height: 36px;
+    text-align: center;
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    transition: all 0.3s;
+  }
+  
+  .social-icons a:hover {
+    background-color: var(--primary);
+  }
+  
+  /* Responsive Tweaks */
+  @media (max-width: 767.98px) {
+    .navbar-brand {
+      font-size: 1.25rem;
+    }
+    
+    .hero-section {
+      padding: 40px 0;
+      text-align: center;
+    }
+    
+    .section-heading h2 {
+      font-size: 1.8rem;
+    }
+  }
+  
+  /* Animation for stats */
+  .counter {
+    font-weight: bold;
+    color: var(--primary);
+  }
+  
+  /* Login/Signup Forms */
+  .input-group-text {
+    border: none;
+  }
+  
+  /* Cards for food items */
+  .card-img-top {
+    height: 200px;
+    object-fit: cover;
+  }
+  /* Custom Carousel Styles */
+#foodCarousel {
+  max-width: 600px; /* Adjust the width as needed */
+  margin: 0 auto;   /* Center the carousel */
+}
+
+.carousel-item img {
+  border-radius: 10px; /* Rounded corners */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add shadow */
+}

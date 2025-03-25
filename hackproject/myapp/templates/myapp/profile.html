@@ -1,0 +1,21 @@
+{% extends 'myapp/base.html' %}
+
+{% block title %}Profile | HackProject{% endblock %}
+
+{% block content %}
+<section class="profile-section">
+    <div class="container">
+        <h2>Welcome, {{ user.username }}</h2>
+        
+        <div class="profile-info">
+            <p><strong>Username:</strong> {{ user.username }}</p>
+            <p><strong>Email:</strong> {{ user.email }}</p>
+            <p><strong>Date Joined:</strong> {{ user.date_joined|date:"F j, Y" }}</p>
+        </div>
+        
+        <div class="profile-actions">
+            <a href="{% url 'logout' %}" class="btn btn-danger">Logout</a>
+        </div>
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,56 @@
+{% extends 'myapp/base.html' %}
+
+{% block title %}Search Results{% endblock %}
+
+{% block content %}
+<section class="py-5">
+    <div class="container">
+        <div class="mb-4">
+            <h2>Search Results for "{{ query }}"</h2>
+            <p class="text-muted">Found {{ food_items|length }} food items</p>
+        </div>
+        
+        <div class="row">
+            {% if food_items %}
+                {% for item in food_items %}
+                    <div class="col-md-4 mb-4">
+                        <div class="card h-100 shadow-sm">
+                            {% if item.image %}
+                                <img src="{{ item.image.url }}" class="card-img-top" alt="{{ item.title }}">
+                            {% else %}
+                                <img src="https://placehold.co/400x300" class="card-img-top" alt="{{ item.title }}">
+                            {% endif %}
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <span class="badge bg-success">{{ item.food_type }}</span>
+                                    <small class="text-muted">{{ item.date_posted|date:"M d, Y" }}</small>
+                                </div>
+                                <h5 class="card-title">{{ item.title }}</h5>
+                                <p class="card-text text-truncate">{{ item.description }}</p>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span><i class="fas fa-map-marker-alt text-secondary"></i> {{ item.location }}</span>
+                                    <span><i class="fas fa-clock text-secondary"></i> Expires: {{ item.expiry_date|date:"M d" }}</span>
+                                </div>
+                            </div>
+                            <div class="card-footer bg-white border-top-0">
+                                <div class="d-grid">
+                                    <a href="#" class="btn btn-outline-success">Request</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <div class="col-12">
+                    <div class="alert alert-info">
+                        <p class="mb-0">No food items found for "{{ query }}". Try different keywords or check back later.</p>
+                    </div>
+                    <div class="text-center mt-4">
+                        <a href="{% url 'home' %}" class="btn btn-success">Back to Home</a>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</section>
+{% endblock %}
