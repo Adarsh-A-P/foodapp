@@ -1,8 +1,10 @@
 from django.contrib import admin
+from .models import FoodItem, Review
 
-# Register your models here.
-from .models import FoodItem  # or whatever your model is called
-from .models import Review
+@admin.register(FoodItem)
+class FoodItemAdmin(admin.ModelAdmin):
+    list_display = ['title', 'quantity', 'food_type', 'expiry_date', 'location']
 
-admin.site.register(FoodItem)
-admin.site.register(Review)
+@admin.register(Review)
+class ReviewAdmin(admin.ModelAdmin):
+    list_display = ['user', 'rating', 'date_posted']

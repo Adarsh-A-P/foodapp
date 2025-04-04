@@ -2,6 +2,8 @@ from django.urls import path
 from . import views
 from .views import review_section
 
+app_name = 'myapp'  # Add this line
+
 urlpatterns = [
     path('', views.home, name='home'),
     path('about/', views.about, name='about'),
@@ -12,5 +14,4 @@ urlpatterns = [
     path('logout/', views.logout_view, name='logout'),
     path('reviews/', review_section, name='review_section'),
     path('food/<int:food_id>/', views.food_detail, name='food_detail'),
-
 ]
