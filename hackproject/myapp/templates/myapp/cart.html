@@ -1,0 +1,145 @@
+{% extends 'myapp/base.html' %}
+{% load static %}
+
+{% block title %}Shopping Cart{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <h2 class="mb-4">Your Shopping Cart</h2>
+    
+    {% if cart_items %}
+        <div class="card shadow-sm">
+            <div class="card-body">
+                {% for item in cart_items %}
+                    <div class="row align-items-center mb-3" id="cart-item-{{ item.id }}">
+                        <div class="col-md-2">
+                            {% if item.product.image %}
+                                <img src="{{ item.product.image.url }}" class="img-fluid rounded" alt="{{ item.product.name }}">
+                            {% else %}
+                                <img src="{% static 'myapp/images/default.jpg' %}" class="img-fluid rounded" alt="{{ item.product.name }}">
+                            {% endif %}
+                        </div>
+                        <div class="col-md-4">
+                            <h5 class="mb-0">{{ item.product.name }}</h5>
+                            <small class="text-muted">₹{{ item.product.price }}/{{ item.product.unit }}</small>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="input-group">
+                                <button class="btn btn-outline-secondary" onclick="updateQuantity('{{ item.id }}', -1)">-</button>
+                                <input type="number" class="form-control text-center" value="{{ item.quantity }}" min="1" id="qty_{{ item.id }}" onchange="updateQuantity('{{ item.id }}', 0, this.value)">
+                                <button class="btn btn-outline-secondary" onclick="updateQuantity('{{ item.id }}', 1)">+</button>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <h6 class="mb-0">₹<span id="total_{{ item.id }}">{{ item.total }}</span></h6>
+                        </div>
+                        <div class="col-md-1">
+                            <button class="btn btn-danger btn-sm" onclick="removeItem('{{ item.id }}')">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                {% endfor %}
+                
+                <hr>
+                
+                <div class="row justify-content-end">
+                    <div class="col-md-4">
+                        <h5>Cart Total: ₹<span id="cart_total">{{ cart_total }}</span></h5>
+                        <button class="btn btn-success w-100 mt-3" onclick="proceedToCheckout()">Proceed to Checkout</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% else %}
+        <div class="text-center py-5">
+            <i class="fas fa-shopping-cart fa-3x text-muted mb-3"></i>
+            <h4>Your cart is empty</h4>
+            <p class="text-muted">Browse our products and add some items to your cart</p>
+            <a href="{% url 'myapp:home' %}" class="btn btn-success">Continue Shopping</a>
+        </div>
+    {% endif %}
+</div>
+
+<script>
+function updateQuantity(itemId, change, newValue = null) {
+    let qtyInput = document.getElementById(`qty_${itemId}`);
+    let newQty;
+    
+    if (newValue !== null) {
+        newQty = parseInt(newValue);
+    } else {
+        newQty = parseInt(qtyInput.value) + change;
+    }
+
+    if (newQty >= 1) {
+        fetch('/myapp/cart/update/', {  // Using absolute path instead of URL template tag
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': getCookie('csrftoken'),
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                item_id: itemId,
+                quantity: newQty
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                qtyInput.value = newQty;
+                document.getElementById(`total_${itemId}`).textContent = data.item_total;
+                document.getElementById('cart_total').textContent = data.cart_total;
+                updateCartCount(data.cart_count);
+            }
+        });
+    }
+}
+
+function removeItem(itemId) {
+    if (confirm('Remove this item from cart?')) {
+        fetch('/myapp/cart/remove/', {  // Using absolute path instead of URL template tag
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': getCookie('csrftoken'),
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                item_id: itemId
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                document.getElementById(`cart-item-${itemId}`).remove();
+                document.getElementById('cart_total').textContent = data.cart_total;
+                updateCartCount(data.cart_count);
+                
+                if (data.cart_count === 0) {
+                    location.reload();
+                }
+            }
+        });
+    }
+}
+
+function proceedToCheckout() {
+    window.location.href = '/myapp/checkout/';  // Using direct path instead of URL template tag
+}
+
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+</script>
+{% endblock %}

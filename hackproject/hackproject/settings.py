@@ -38,7 +38,7 @@ ROOT_URLCONF = 'hackproject.urls'  # Replace with your project name
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates'],  # Add your template directory
+        'DIRS': [],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -46,6 +46,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'myapp.views.cart_count_processor',
             ],
         },
     },
@@ -90,16 +91,16 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'  # Directory for collected static files i
 
 # Media files (Uploaded by users)
 MEDIA_URL = '/media/'
-MEDIA_ROOT = BASE_DIR / 'media'  # Directory for media files
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')  # Directory for media files
 
 # Default primary key field type
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Login/Logout URLs
-LOGIN_URL = 'login'  # Replace with your login URL name
-LOGOUT_URL = 'logout'  # Replace with your logout URL name
-LOGIN_REDIRECT_URL = 'home'  # Replace with your home URL name
-LOGOUT_REDIRECT_URL = 'home'  # Replace with your home URL name
+LOGIN_URL = 'myapp:login'
+LOGOUT_URL = 'myapp:logout'
+LOGIN_REDIRECT_URL = 'myapp:home'
+LOGOUT_REDIRECT_URL = 'myapp:home'
 
 # Email settings (for password reset, etc.)
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'  # For development

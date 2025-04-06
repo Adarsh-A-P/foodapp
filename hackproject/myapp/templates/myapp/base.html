@@ -13,13 +13,14 @@
     <!-- Custom CSS -->
     
     <link rel="stylesheet" href="{% static 'css/review.css' %}">
+    <!-- Add in the head section -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>
     <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary sticky-top">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-success sticky-top">
         <div class="container">
-            <a class="navbar-brand d-flex align-items-center" href="{% url 'myapp:home' %}">
-            
+            <a class="navbar-brand d-flex align-items-center text-white" href="{% url 'myapp:home' %}">
                 <i class="fas fa-utensils me-2"></i>
                 <span>Zeta</span>
             </a>
@@ -27,7 +28,19 @@
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
-                <form class="d-flex mx-auto" action="{% url 'search_food' %}" method="GET">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="{% url 'myapp:home' %}">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="{% url 'myapp:about' %}">About Us</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="{% url 'myapp:review_section' %}">Reviews</a>
+                    </li>
+                </ul>
+                
+                <form class="d-flex mx-2" action="{% url 'myapp:search_food' %}" method="GET">
                     <div class="input-group">
                         <input type="text" name="q" class="form-control" placeholder="Search for food items..." aria-label="Search">
                         <button class="btn btn-light" type="submit">
@@ -35,21 +48,22 @@
                         </button>
                     </div>
                 </form>
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'home' %}">Home</a>
-                        
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'about' %}">About Us</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'review_section' %}">Reviews</a>
-                    </li>
-                    
+                
+                <ul class="navbar-nav">
+                    <!-- In the navbar, update the cart link styling -->
                     {% if user.is_authenticated %}
                         <li class="nav-item">
-                            <a class="nav-link" href="{% url 'add_food_item' %}">Share Food</a>
+                            <a class="nav-link" href="{% url 'myapp:add_food_item' %}">Share Food</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-white" href="{% url 'myapp:cart' %}">
+                                <i class="fas fa-shopping-cart"></i>
+                                {% if cart_count > 0 %}
+                                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                                        {{ cart_count }}
+                                    </span>
+                                {% endif %}
+                            </a>
                         </li>
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -59,15 +73,26 @@
                                 <li><a class="dropdown-item" href="#">My Profile</a></li>
                                 <li><a class="dropdown-item" href="#">My Donations</a></li>
                                 <li><hr class="dropdown-divider"></li>
-                                <li><a class="dropdown-item" href="{% url 'logout' %}">Logout</a></li>
+                                <li><a class="dropdown-item" href="{% url 'myapp:logout' %}">Logout</a></li>
                             </ul>
                         </li>
                     {% else %}
                         <li class="nav-item">
-                            <a class="nav-link" href="{% url 'login' %}">Login</a>
+                            <a class="nav-link" href="{% url 'myapp:login' %}">Login</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link btn btn-outline-light btn-sm ms-2" href="{% url 'signup' %}">Sign Up</a>
+                            <a class="nav-link btn btn-outline-light btn-sm ms-2" href="{% url 'myapp:signup' %}">Sign Up</a>
+                        </li>
+                        <!-- Add this before the user authentication section in navbar -->
+                        <li class="nav-item">
+                            <a class="nav-link position-relative" href="{% url 'myapp:cart' %}">
+                                <i class="fas fa-shopping-cart"></i>
+                                {% if cart_count > 0 %}
+                                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                                        {{ cart_count }}
+                                    </span>
+                                {% endif %}
+                            </a>
                         </li>
                     {% endif %}
                 </ul>
@@ -96,7 +121,7 @@
                 <div class="col-md-2 mb-3">
                     <h6>Quick Links</h6>
                     <ul class="list-unstyled">
-                        <li><a href="{% url 'home' %}" class="text-muted">Home</a></li>
+                        <li><a href="{% url 'myapp:home' %}" class="text-muted">Home</a></li>
                         <li><a href="#" class="text-muted">About Us</a></li>
                         <li><a href="#" class="text-muted">How It Works</a></li>
                         <li><a href="#" class="text-muted">Contact</a></li>

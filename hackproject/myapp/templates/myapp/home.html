@@ -121,13 +121,14 @@
                         <p class="card-text text-truncate">{{ item.description }}</p>
                         <div class="d-flex justify-content-between align-items-center">
                             <span><i class="fas fa-map-marker-alt text-secondary"></i> {{ item.location }}</span>
-                            <span><i class="fas fa-clock text-secondary"></i> Expires: {{ item.expiry_date|localtime|date:"M d, Y H:i" }}</span>
+                            <span><i class="fas fa-clock text-secondary"></i> Expires: {{ item.expiry_date|date:"M d, Y H:i" }}</span>
                         </div>
                     </div>
                     <div class="card-footer bg-white border-top-0">
                         <div class="d-grid">
-                            <a href="{% url 'myapp:food_detail' item.id %}?requested_by=user" class="btn btn-outline-success">View Details</a>
-                            <a href="#" class="btn btn-outline-success">Request</a>
+                            <a href="{% url 'myapp:food_detail' item.id %}?requested_by=user"
+                                class="btn btn-outline-success">View Details</a>
+
                         </div>
                     </div>
                 </div>
@@ -208,7 +209,9 @@
                         <h5 class="card-title">Organic Apples</h5>
                         <p class="card-text text-muted">Fresh and juicy, straight from the farm.</p>
                         <h4 class="text-success">₹120/kg</h4>
-                        <a href="#" class="btn btn-outline-success">Add to Cart</a>
+                        <button onclick="addToCart(1, 'Organic Apples', 120, 'kg')" class="btn btn-outline-success">
+                            <i class="fas fa-cart-plus me-2"></i>Add to Cart
+                        </button>
                     </div>
                 </div>
             </div>
@@ -221,7 +224,9 @@
                         <h5 class="card-title">Organic Tomatoes</h5>
                         <p class="card-text text-muted">Rich in flavor and nutrients.</p>
                         <h4 class="text-success">₹80/kg</h4>
-                        <a href="#" class="btn btn-outline-success">Add to Cart</a>
+                        <button onclick="addToCart(2, 'Organic Tomatoes', 80, 'kg')" class="btn btn-outline-success">
+                            <i class="fas fa-cart-plus me-2"></i>Add to Cart
+                        </button>
                     </div>
                 </div>
             </div>
@@ -232,12 +237,17 @@
                     <img src="{% static 'myapp/images/banana.jpg' %}" class="card-img-top" alt="Organic Bananas">
                     <div class="card-body text-center">
                         <h5 class="card-title">Organic Bananas</h5>
-                        <p class="card-text text-muted">Naturally sweet and healthy.</p>
+                        <p class="card-text text-muted">Sweet and nutritious, perfect for snacking.</p>
                         <h4 class="text-success">₹60/dozen</h4>
-                        <a href="#" class="btn btn-outline-success">Add to Cart</a>
+                        <button onclick="addToCart(3, 'Organic Bananas', 60, 'dozen')" class="btn btn-outline-success">
+                            <i class="fas fa-cart-plus me-2"></i>Add to Cart
+                        </button>
                     </div>
                 </div>
             </div>
+
+            <!-- Add this JavaScript at the bottom of home.html -->
+            
         </div>
 
         <div class="text-center mt-4">
@@ -262,12 +272,11 @@
                         <div class="d-flex mb-3">
                             <span class="text-success">
                                 {% for i in "12345" %}
-                                    {% if forloop.counter <= review.rating %}
-                                        <i class="fas fa-star"></i>
+                                {% if forloop.counter <= review.rating %} <i class="fas fa-star"></i>
                                     {% else %}
-                                        <i class="far fa-star"></i>
+                                    <i class="far fa-star"></i>
                                     {% endif %}
-                                {% endfor %}
+                                    {% endfor %}
                             </span>
                         </div>
                         <!-- Review Comment -->
@@ -303,7 +312,7 @@
             <div class="col-lg-6 text-center">
                 <h3>Join Our Newsletter</h3>
                 <p class="text-muted mb-4">Get tips on reducing food waste and updates about our platform.</p>
-                <form class="d-flex">
+                <form class="d-flex mx-auto" action="{% url 'myapp:search_food' %}" method="GET">
                     <div class="input-group">
                         <input type="email" class="form-control" placeholder="Your email address" required>
                         <button class="btn btn-success" type="submit">Subscribe</button>
@@ -313,4 +322,79 @@
         </div>
     </div>
 </section>
+<script>
+    // Function to get CSRF token from cookies
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+
+    function addToCart(productId, name, price, unit) {
+        const csrftoken = getCookie('csrftoken');
+        
+        fetch(`{% url 'myapp:add_to_cart' %}`, {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': csrftoken,
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                product_id: productId,
+                name: name,
+                price: price,
+                unit: unit
+            }),
+            credentials: 'same-origin'
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.success) {
+                // Show success message using SweetAlert2
+                Swal.fire({
+                    title: 'Added to Cart!',
+                    text: `${name} has been added to your cart`,
+                    icon: 'success',
+                    showCancelButton: true,
+                    confirmButtonText: 'View Cart',
+                    cancelButtonText: 'Continue Shopping'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        window.location.href = "{% url 'myapp:cart' %}";
+                    }
+                });
+
+                // Update cart count if updateCartCount function exists
+                if (typeof updateCartCount === 'function') {
+                    updateCartCount(data.cart_count);
+                }
+            } else {
+                throw new Error(data.message || 'Failed to add item to cart');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            Swal.fire({
+                title: 'Error!',
+                text: 'Failed to add item to cart. Please try again.',
+                icon: 'error',
+                confirmButtonText: 'OK'
+            });
+        });
+    }
+</script>
 {% endblock %}

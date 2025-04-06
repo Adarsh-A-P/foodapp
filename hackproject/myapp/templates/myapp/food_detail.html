@@ -117,13 +117,15 @@
                             <i class="fas fa-handshake me-2"></i>Request This Food
                         </button>
                         
-                        <a href="#" class="btn btn-outline-success btn-lg" id="showMapBtn">
-                            <i class="fas fa-map-marked-alt me-2"></i>View On Map
-                        </a>
+                        {% if food_item.location_link %}
+                            <a href="{{ food_item.location_link }}" class="btn btn-outline-success btn-lg" target="_blank">
+                                <i class="fas fa-map-marked-alt me-2"></i>View On Map
+                            </a>
+                        {% endif %}
                         
                         {% if request.user == food_item.user %}
                             <div class="d-grid gap-2">
-                                <a href="{% url 'edit_food_item' food_item.id %}" class="btn btn-outline-primary">
+                                <a href="{% url 'myapp:edit_food_item' food_item.id %}" class="btn btn-outline-primary">
                                     <i class="fas fa-edit me-2"></i>Edit Listing
                                 </a>
                                 <button class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#deleteModal">
@@ -203,7 +205,7 @@ When would be a good time to pick it up?
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                <form method="POST" action="{% url 'delete_food_item' food_item.id %}">
+                <form method="POST" action="{% url 'myapp:delete_food_item' food_item.id %}">
                     {% csrf_token %}
                     <button type="submit" class="btn btn-danger">
                         <i class="fas fa-trash me-2"></i>Delete Permanently

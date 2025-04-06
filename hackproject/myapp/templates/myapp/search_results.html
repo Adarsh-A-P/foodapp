@@ -46,9 +46,8 @@
                         <p class="mb-0">No food items found for "{{ query }}". Try different keywords or check back later.</p>
                     </div>
                     <div class="text-center mt-4">
-                        <form class="d-flex mx-auto" action="{% url 'myapp:search_food' %}" method="GET">
-                            <a href="{% url 'home' %}" class="btn btn-success">Back to Home</a>
-                        </div>
+                        <a href="{% url 'myapp:home' %}" class="btn btn-success">Back to Home</a>
+                    </div>
                 </div>
             {% endif %}
         </div>

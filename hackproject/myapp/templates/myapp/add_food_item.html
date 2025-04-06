@@ -15,7 +15,7 @@
                             <p class="text-muted">Fill in the details about the food you want to share</p>
                         </div>
                         
-                        <form method="post" action="{% url 'add_food_item' %}" enctype="multipart/form-data">
+                        <form method="post" action="{% url 'myapp:add_food_item' %}" enctype="multipart/form-data">
                             {% csrf_token %}
                             
                             {% if form.errors %}
@@ -79,7 +79,17 @@
                                     {% endif %}
                                 </div>
                             </div>
-                            
+
+                            <!-- Add Location Link field -->
+                            <div class="mb-3">
+                                <label for="id_location_link" class="form-label">Location Link (Optional)</label>
+                                <input type="url" name="location_link" id="id_location_link" class="form-control" placeholder="Paste Google Maps or any location link">
+                                {% if form.location_link.errors %}
+                                    <small class="text-danger">{{ form.location_link.errors }}</small>
+                                {% endif %}
+                                <div class="form-text text-muted">Share a map link to help others find the pickup location easily</div>
+                            </div>
+
                             <div class="mb-4">
                                 <label for="id_image" class="form-label">Food Image</label>
                                 <input type="file" name="image" id="id_image" class="form-control" accept="image/*">
@@ -91,7 +101,7 @@
                             
                             <div class="d-grid gap-2">
                                 <button type="submit" class="btn btn-success btn-lg">Share Food</button>
-                                <a href="{% url 'home' %}" class="btn btn-outline-secondary">Cancel</a>
+                                <a href="{% url 'myapp:home' %}" class="btn btn-outline-secondary">Cancel</a>
                             </div>
                         </form>
                     </div>
